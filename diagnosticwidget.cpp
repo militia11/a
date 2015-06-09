@@ -1476,7 +1476,7 @@ if (packet.contains("\n") || packet.contains("k") )
             ui -> infoLabel -> setVisible(false) ;
             ui -> showResultsButton -> setEnabled(true);
             ui -> sendData1Button -> setEnabled(true);
-            ui -> sendData2Bugtton -> setEnabled(true);
+            ui -> sendData2Button -> setEnabled(true);
             ui -> sendData3Button -> setEnabled(true);
             ui -> sendData4Button -> setEnabled(true);
             ui -> sendData5Button -> setEnabled(true);

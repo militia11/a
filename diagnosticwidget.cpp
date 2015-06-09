@@ -1,4 +1,4 @@
-#include "diagnosticwidget.h" //master
+﻿#include "diagnosticwidget.h" //master
 #include "ui_diagnosticwidget.h"
 #include<QPixmap>
 #include<QImageIOHandler>
@@ -1223,6 +1223,44 @@ void DiagnosticWidget::closeWaitingDialog(QByteArray array)
   packet += array ;
 
   int idxToAdd = chosenRatioNormGroup * 20;
+
+  if (packet.contains("k") )
+  {
+      packet = packet.simplified() ;
+      int pos = packet.indexOf("k");
+      packet.remove(pos,1);
+      wFlag=false;
+      if(r3WorkaroundSendAgain//seems like hw didnt started - try again
+              && r3WorkaroundTryNum < 1)
+      {
+          r3WorkaroundTryNum ++;
+          QVector<packetType> tmp{packetType("r3", 100)};
+          comIO->enqueueOutgoing(tmp);
+      }
+      else
+      {
+          ui -> progressBar -> setVisible(false) ;
+          ui -> infoLabel -> setVisible(false) ;
+          ui -> showResultsButton -> setEnabled(true);
+          ui -> sendData1Button -> setEnabled(true);
+          ui -> sendData2Button -> setEnabled(true);
+          ui -> sendData3Button -> setEnabled(true);
+          ui -> sendData4Button -> setEnabled(true);
+          ui -> sendData5Button -> setEnabled(true);
+          ui -> runDriverButton -> setDisabled(true) ;
+          ui -> stopDriverButton -> setDisabled(true) ;
+          ui -> runDriverButton -> setEnabled(true) ;\
+          ui -> stopDriverButton -> setEnabled(true) ;
+          ui -> subgroupLabel -> setText("") ;
+          noEntry=true;
+          ui -> pressureLabel -> setText("0 bar") ;
+          ui -> timeLabel -> setText("0 µs") ;
+          ui -> frequencyLabel -> setText("0 Hz") ;
+          ui -> counterLabel -> setText("0 cykli") ;
+          ui -> infoLabel -> setText("") ;
+      }
+  }
+
 if(noEntry==false){
   if(packet.contains("f")){
    w.clear();
@@ -1459,7 +1497,7 @@ if (packet.contains("\n") || packet.contains("k") )
   {
     packet = packet.simplified() ;
     if (packet.contains("k") )
-    {   //runFlag=true;
+    {
         int pos = packet.indexOf("k");
         packet.remove(pos,1);
         wFlag=false;
@@ -1471,7 +1509,7 @@ if (packet.contains("\n") || packet.contains("k") )
             comIO->enqueueOutgoing(tmp);
         }
         else
-        {//runflag tu:g
+        {
             ui -> progressBar -> setVisible(false) ;
             ui -> infoLabel -> setVisible(false) ;
             ui -> showResultsButton -> setEnabled(true);
@@ -1516,15 +1554,11 @@ if (packet.contains("\n") || packet.contains("k") )
         noEntry=true;
         int pos = packet.indexOf("2");
         packet.remove(pos,1);
-
     }
     packet.clear() ;
   }
 }
 
-//timerPictureSlideShow = new QTimer(this);
-//timerPictureSlideShow->setInterval(2300);
-//connect(timerPictureSlideShow,SIGNAL(timeout()), this, SLOT(nextPictureSlideShow()));
 void DiagnosticWidget::changeCompany(QString company)
 {
   QDir dir ;

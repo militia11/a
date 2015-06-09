@@ -1518,7 +1518,7 @@ if (packet.contains("\n") || packet.contains("k") )
         packet.remove(pos,1);
 
     }
-    //packet.clear() ;
+    packet.clear() ;
   }
 }
 
